@@ -2,6 +2,22 @@
 
 An authentication plugin for server.js. So far it handles _Github_ and _Twitter_ login.
 
+```js
+import server from "server";
+import auth from "@server/auth";
+
+server.plugins.push(auth);
+
+server(
+  get("/", ctx => {
+    return `
+      Hello ${ctx.user ? ctx.user.name : "Anonymous"}.<br />
+      <a href="/login/github">Login with Github</a>
+    `;
+  })
+);
+```
+
 ## Getting Started
 
 First install server and this module:
@@ -36,7 +52,7 @@ server.plugins.push(auth);
 // Define these 3-4 methods to access your local DB:
 const findUser = profile => { ... };
 const createUser = profile => { ... };
-const serialize = user => { ... };  // Optional
+const serialize = user => user.id;
 const deserialize = id => { ... };
 
 // Initialize server.js as usual, passing the options for auth
@@ -48,15 +64,13 @@ server(
 
 Finally start your server with `node .`, and visit `http://localhost:3000/login/github` or `http://localhost:3000/login/twitter` to login into your app. Visit `/user` to see your profile information.
 
-## No Database
+## Database Integration
 
-You can use it with no database by defining the helper functions like this:
+The default shown in the beginning is for a no-db. When you have a DB, you need to write two functions to save and find the user in the database, and another two functions to make the auth system to use the sessions/cookies.
 
-```js
-const findUser = profile => null;
-const createUser = profile => profile;
-const serialize = user => JSON.stringify(user);
-const deserialize = id => JSON.parse(id);
-```
+This is achieved with these functions (all of them are async):
 
-This is very useful to quickly launch the app without being bothered to setup a database yet. If you set up a persistent cookie store, then the login will also persist! Otherwise when the server is restarted, the user will need to login again.
+- `findUser(profile) => user`: given the profile retrieved from the social network, this function will return the user from your database. You can make the match however you prefer; through the `profile.email`, or `profile.username`, or `profile.id` depending on your needs and whether you have one or multiple providers.
+- `createUser(profile) => user`: TODO
+- `serialize(user) => id`: TODO
+- `deserialize(id) => user`: TODO

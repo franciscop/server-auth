@@ -15,15 +15,22 @@ export default {
   name: "auth",
   options: {
     // Creation on first/later logins
-    findUser: { required: true, type: Function },
-    createUser: { required: true, type: Function },
+    findUser: {
+      default: () => null,
+      type: Function
+    },
+    createUser: {
+      default: profile => profile,
+      type: Function
+    },
 
     // Serialization to/from session
     serialize: {
-      default: user => user.id || user._id
+      default: user => JSON.stringify(user),
+      type: Function
     },
     deserialize: {
-      required: true,
+      default: id => JSON.parse(id),
       type: Function
     },
 
