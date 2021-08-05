@@ -1,16 +1,17 @@
 {
   "name": "@server/auth",
   "version": "0.1.0",
-  "description": "",
+  "description": "Server.js plugin to handle authentication with Github and Twitter",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "UNLICENSED",
-  "files": [],
+  "files": [
+    "strategy-github.js",
+    "strategy-twitter.js"
+  ],
   "dependencies": {
     "server": "^1.0.34",
     "passport": "^0.4.1",
