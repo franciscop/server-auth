@@ -9,6 +9,7 @@
   "author": "",
   "license": "UNLICENSED",
   "files": [
+    "verify.js",
     "strategy-github.js",
     "strategy-twitter.js"
   ],

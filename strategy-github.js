@@ -1,4 +1,5 @@
 import passportGithub from "passport-github2";
+import verify from "./verify.js";
 
 const getEmail = emails => {
   if (!emails) {
@@ -16,34 +17,30 @@ const getEmail = emails => {
   return emails[0].value;
 };
 
-const parseUser = ({ findUser, createUser }) => async (_, _1, profile, cb) => {
-  try {
-    delete profile._raw;
-    const data = {
-      id: "github:" + profile.id,
-      name: profile.displayName || profile._json.login,
-      email: getEmail(profile.emails),
-      username: profile._json.login,
-      location: profile._json.location || null,
-      language: profile.language || "en",
-      image: (profile.photos[0] || { value: "" }).value,
-      raw: { ...profile, ...profile._json }
-    };
-    delete data.raw._json;
-    let user = await findUser(data);
-    if (!user) {
-      user = await createUser(data);
-    }
-    cb(null, user);
-  } catch (err) {
-    cb(err);
-  }
+const cleanProfile = profile => {
+  delete profile._raw;
+  const user = {
+    id: "github:" + profile.id,
+    name: profile.displayName || profile._json.login,
+    email: getEmail(profile.emails),
+    username: profile._json.login || null,
+    location: profile._json.location || null,
+    language: profile.language || null,
+    image: profile.photos[0]?.value,
+    raw: { ...profile, ...profile._json }
+  };
+  delete user.raw._json;
+  return user;
 };
 
 export default ({ findUser, createUser }, { id, secret, scope }) => {
-  const github = new passportGithub.Strategy(
-    { clientID: id, clientSecret: secret, scope: scope },
-    parseUser({ findUser, createUser })
+  return new passportGithub.Strategy(
+    { clientID: id, clientSecret: secret, scope },
+    verify(async raw => {
+      const profile = cleanProfile(raw);
+      let user = await findUser(profile);
+      if (!user) user = await createUser(profile);
+      return user;
+    })
   );
-  return github;
 };
