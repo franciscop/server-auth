@@ -1,0 +1,20 @@
+{
+  "name": "@server/auth",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "files": [],
+  "dependencies": {
+    "server": "^1.0.34",
+    "passport": "^0.4.1",
+    "passport-github2": "^0.1.12",
+    "passport-twitter": "^1.0.4"
+  }
+}
