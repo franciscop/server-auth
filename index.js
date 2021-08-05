@@ -67,8 +67,12 @@ export default {
   },
   init: ctx => {
     // GITHUB
-    passport.use(github(ctx.options.auth, ctx.options.auth.github));
-    passport.use(twitter(ctx.options.auth, ctx.options.auth.twitter));
+    if (ctx.options.auth.github.id && ctx.options.auth.github.secret) {
+      passport.use(github(ctx.options.auth, ctx.options.auth.github));
+    }
+    if (ctx.options.auth.twitter.id && ctx.options.auth.twitter.secret) {
+      passport.use(twitter(ctx.options.auth, ctx.options.auth.twitter));
+    }
 
     // General, for sessions
     const { serialize, deserialize } = ctx.options.auth;
