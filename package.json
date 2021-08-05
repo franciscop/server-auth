@@ -1,6 +1,6 @@
 {
   "name": "@server/auth",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Server.js plugin to handle authentication with Github and Twitter",
   "main": "index.js",
   "type": "module",
