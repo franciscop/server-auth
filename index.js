@@ -98,7 +98,10 @@ export default {
     get("/login/:provider", ctx => {
       const provider = ctx.params.provider;
       const path = ctx.options.auth[provider].callback;
-      const callbackURL = ctx.protocol + "://" + ctx.headers.host + path;
+      const protocol = ctx.headers.host.startsWith("localhost:")
+        ? "http"
+        : "https";
+      const callbackURL = protocol + "://" + ctx.headers.host + path;
       return modern(passport.authenticate(provider, { callbackURL }))(ctx);
     }),
 
